@@ -1,11 +1,18 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
+import { ApiTags } from '@nestjs/swagger';
+import { CreateEmployeeCommand } from './commands/create-employee/create-employee.command';
+import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { EmployeeService } from './employee.service';
 import { Employee } from './model/employee';
 
+@ApiTags('employee')
 @Controller('employee')
 export class EmployeeController {
 
-    constructor(private employeeService: EmployeeService){}
+    constructor(
+        private employeeService: EmployeeService,
+        private readonly commandBus: CommandBus){}
 
     @Get('/all')
     async getEmployeeList(): Promise<Employee[]>{
@@ -18,7 +25,12 @@ export class EmployeeController {
     }
 
     @Post()
-    addEmployee(@Body() employee: Employee): string{
+    addEmployee(@Body() employee: CreateEmployeeDto): Promise<Employee>{
+        return this.commandBus.execute(new CreateEmployeeCommand(employee));
+    } 
+    
+    @Post('/2')
+    addEmployee2(@Body() employee: Employee): string{
         return this.employeeService.save(employee);
     } 
 
