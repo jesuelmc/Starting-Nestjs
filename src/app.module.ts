@@ -1,12 +1,17 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { AppService } from './app.service';
+import configuration from "./config/configuration";
 import { EmployeeModule } from './employee/employee.module';
 import { Employee } from './employee/model/employee';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      load: [configuration],
+    }),
     EmployeeModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
