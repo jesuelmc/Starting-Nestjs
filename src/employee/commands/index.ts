@@ -1,5 +1,5 @@
-import { CreateEmployeeHandler } from "./create-employee/create-employee.handler";
+import { CreateEmployeeHandler } from './create-employee/create-employee.handler';
 
 export const CommandHandlers = [
-    CreateEmployeeHandler
+  CreateEmployeeHandler,
 ];

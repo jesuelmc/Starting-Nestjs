@@ -1,28 +1,39 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { AggregateRoot } from '@nestjs/cqrs';
+import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { EmployeeCreatedEvent } from '../events/impl/employee-created.event';
 
 @Entity()
-export class Employee {
-    @PrimaryGeneratedColumn()
-    id: number;
+export class Employee extends AggregateRoot {
+  constructor(id: number) {
+    super();
+  }
 
-    @ApiProperty()
-    @Column()
-    firstName: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @ApiProperty()
-    @Column()
-    lastName: string;
+  @ApiProperty()
+  @Column()
+  firstName: string;
 
-    @ApiProperty()
-    @Column()
-    middleName: string;
+  @ApiProperty()
+  @Column()
+  lastName: string;
 
-    @ApiProperty()
-    @Column()
-    dob: string; 
+  @ApiProperty()
+  @Column()
+  middleName: string;
 
-    @ApiProperty()
-    @Column()
-    ssn: string;
+  @ApiProperty()
+  @Column()
+  dob: string;
+
+  @ApiProperty()
+  @Column()
+  ssn: string;
+
+  sendMessage() {
+    console.log('works');
+    this.apply(new EmployeeCreatedEvent(5));
+  }
 }
